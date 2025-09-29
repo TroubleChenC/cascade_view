@@ -1,7 +1,7 @@
 name: cascade_view
 description: "cascade picker"
 version: 0.0.1
-homepage:
+homepage: "https://github.com/TroubleChenC/cascade_view"
 
 environment:
   sdk: ^3.7.0
