@@ -216,7 +216,7 @@ class _CascadeViewState extends State<CascadeView>
 }
 
 class _ShimmerList extends StatelessWidget {
-  const _ShimmerList({super.key});
+  const _ShimmerList();
 
   @override
   Widget build(BuildContext context) {
