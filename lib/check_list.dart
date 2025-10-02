@@ -18,12 +18,14 @@ class CheckList extends StatefulWidget {
   State<CheckList> createState() => _CheckListState();
 }
 
-class _CheckListState extends State<CheckList> {
+class _CheckListState extends State<CheckList>
+    with AutomaticKeepAliveClientMixin {
   List<ListItem> get _items => widget.items;
   int _selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView.builder(
       itemCount: widget.items.length,
       itemBuilder: (BuildContext context, int index) {
@@ -43,7 +45,7 @@ class _CheckListState extends State<CheckList> {
                       fontSize: 16.0,
                       color:
                           widget.items[index].isSelected
-                              ? Theme.of(context).colorScheme.secondary
+                              ? Theme.of(context).colorScheme.primary
                               : null,
                       // 如果选中，设置文字颜色为强调色，否则为默认颜色
                     ),
@@ -54,7 +56,7 @@ class _CheckListState extends State<CheckList> {
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Icon(
                   widget.items[index].isSelected ? Icons.check : null,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -83,4 +85,7 @@ class _CheckListState extends State<CheckList> {
       widget.onSelect!(selected, widget.items[index]);
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

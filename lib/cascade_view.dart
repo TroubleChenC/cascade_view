@@ -9,8 +9,9 @@ class CascadeOption {
   final String label;
   final CascadeValue value;
   List<CascadeOption>? children;
+  dynamic addition; // addition data
 
-  CascadeOption(this.label, this.value, {this.children});
+  CascadeOption(this.label, this.value, {this.children, this.addition});
 }
 
 const List<CascadeOption> optionSkeleton = []; // loading effect
@@ -29,6 +30,7 @@ class _LevelOption {
   _LevelOption({required this.options, this.selected});
 }
 
+/// cascade
 class CascadeView extends StatefulWidget {
   const CascadeView({
     super.key,
@@ -75,24 +77,13 @@ class _CascadeViewState extends State<CascadeView>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Color.fromARGB(255, 230, 230, 230),
-                width: 1.0,
-              ),
-            ),
-          ),
-          child: TabBar(
-            isScrollable: true,
-            controller: _tabController,
-            indicatorColor: Colors.blue,
-            labelColor: Colors.blue,
-            unselectedLabelColor: Colors.black,
-            tabs: _generateTabs(),
-          ),
+        TabBar(
+          isScrollable: true,
+          controller: _tabController,
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Colors.black,
+          tabs: _generateTabs(),
         ),
         Expanded(
           child: TabBarView(
@@ -212,6 +203,84 @@ class _CascadeViewState extends State<CascadeView>
     }
 
     return CascadeValueExtend(items, isLeaf);
+  }
+}
+
+/// async cascade
+class AsyncCascadeView extends StatefulWidget {
+  const AsyncCascadeView({
+    super.key,
+    this.options = const [],
+    required this.getChildren,
+    this.onChange,
+  });
+
+  final List<CascadeOption> options;
+  final Future<List<CascadeOption>> Function(CascadeOption) getChildren;
+  final void Function(List<CascadeValue> value, CascadeValueExtend extend)?
+  onChange;
+
+  @override
+  State<AsyncCascadeView> createState() => _AsyncCascadeViewState();
+}
+
+class _AsyncCascadeViewState extends State<AsyncCascadeView> {
+  List<CascadeOption> _list = [];
+  var valueToOptions = <CascadeValue, List<CascadeOption>?>{};
+
+  @override
+  void initState() {
+    super.initState();
+
+    valueToOptions.addAll({null: widget.options});
+    setState(() {
+      _list = widget.options;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CascadeView(options: _list, onChange: _onChange);
+  }
+
+  void _onChange(List<CascadeValue> value, CascadeValueExtend extend) {
+    for (var element in value) {
+      int index = value.indexOf(element);
+      _fetchOptionsForValue(extend.items[index]);
+    }
+
+    if (widget.onChange != null) {
+      widget.onChange!(value, extend);
+    }
+  }
+
+  void _fetchOptionsForValue(CascadeOption v) async {
+    var key = v.value;
+    if (valueToOptions.containsKey(key)) return;
+
+    var data = await widget.getChildren(v);
+    valueToOptions.addAll({key: data.isEmpty ? null : data});
+
+    setState(() {
+      _list = _generateOptions(null) ?? [];
+    });
+  }
+
+  List<CascadeOption>? _generateOptions(CascadeValue v) {
+    var options = valueToOptions[v];
+    if (!valueToOptions.containsKey(v)) {
+      return optionSkeleton;
+    }
+
+    if (options == null || options.isEmpty) {
+      return null;
+    }
+
+    for (var element in options) {
+      element.children = _generateOptions(element.value);
+    }
+
+    return options;
   }
 }
 
