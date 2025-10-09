@@ -9,9 +9,15 @@ class ListItem {
 }
 
 class CheckList extends StatefulWidget {
-  const CheckList({super.key, required this.items, this.onSelect});
+  const CheckList({
+    super.key,
+    required this.items,
+    this.onSelect,
+    this.selectedColor,
+  });
 
   final List<ListItem> items;
+  final Color? selectedColor;
   final Function(dynamic value, ListItem? extend)? onSelect;
 
   @override
@@ -45,7 +51,8 @@ class _CheckListState extends State<CheckList>
                       fontSize: 16.0,
                       color:
                           widget.items[index].isSelected
-                              ? Theme.of(context).colorScheme.primary
+                              ? (widget.selectedColor ??
+                                  Theme.of(context).colorScheme.primary)
                               : null,
                       // 如果选中，设置文字颜色为强调色，否则为默认颜色
                     ),
@@ -56,7 +63,9 @@ class _CheckListState extends State<CheckList>
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Icon(
                   widget.items[index].isSelected ? Icons.check : null,
-                  color: Theme.of(context).colorScheme.primary,
+                  color:
+                      (widget.selectedColor ??
+                          Theme.of(context).colorScheme.primary),
                 ),
               ),
             ],

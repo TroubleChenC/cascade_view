@@ -37,12 +37,14 @@ class CascadeView extends StatefulWidget {
     required this.options,
     this.value = const [],
     this.onChange,
+    this.selectedColor,
   });
 
   final List<CascadeOption> options;
   final void Function(List<CascadeValue> value, CascadeValueExtend extend)?
   onChange;
   final List<CascadeValue> value;
+  final Color? selectedColor;
 
   @override
   State<CascadeView> createState() => _CascadeViewState();
@@ -77,13 +79,27 @@ class _CascadeViewState extends State<CascadeView>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TabBar(
-          isScrollable: true,
-          controller: _tabController,
-          indicatorColor: Theme.of(context).colorScheme.primary,
-          labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor: Colors.black,
-          tabs: _generateTabs(),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromARGB(255, 230, 230, 230),
+                width: 1.0,
+              ),
+            ),
+          ),
+          child: TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            controller: _tabController,
+            indicatorColor:
+                widget.selectedColor ?? Theme.of(context).colorScheme.primary,
+            labelColor:
+                widget.selectedColor ?? Theme.of(context).colorScheme.primary,
+            unselectedLabelColor: Colors.black,
+            tabs: _generateTabs(),
+          ),
         ),
         Expanded(
           child: TabBarView(
@@ -174,6 +190,7 @@ class _CascadeViewState extends State<CascadeView>
       return CheckList(
         key: ValueKey(index),
         items: items,
+        selectedColor: widget.selectedColor,
         onSelect: (selectValue, _) {
           _onItemSelect(selectValue, index);
         },
@@ -213,12 +230,14 @@ class AsyncCascadeView extends StatefulWidget {
     this.options = const [],
     required this.getChildren,
     this.onChange,
+    this.selectedColor,
   });
 
   final List<CascadeOption> options;
   final Future<List<CascadeOption>> Function(CascadeOption) getChildren;
   final void Function(List<CascadeValue> value, CascadeValueExtend extend)?
   onChange;
+  final Color? selectedColor;
 
   @override
   State<AsyncCascadeView> createState() => _AsyncCascadeViewState();
@@ -240,7 +259,11 @@ class _AsyncCascadeViewState extends State<AsyncCascadeView> {
 
   @override
   Widget build(BuildContext context) {
-    return CascadeView(options: _list, onChange: _onChange);
+    return CascadeView(
+      options: _list,
+      onChange: _onChange,
+      selectedColor: widget.selectedColor,
+    );
   }
 
   void _onChange(List<CascadeValue> value, CascadeValueExtend extend) {
@@ -291,32 +314,21 @@ class _ShimmerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
         child: ListView.builder(
           itemBuilder:
               (_, __) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: double.infinity,
-                      height: 24.0,
-                      color: Colors.white,
-                    ),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                    Container(
-                      width: double.infinity,
-                      height: 8.0,
-                      color: Colors.white,
-                    ),
-                  ],
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Container(
+                  width: double.infinity,
+                  height: 24.0,
+                  color: Colors.white,
                 ),
               ),
-          itemCount: 6,
+          itemCount: 8,
         ),
       ),
     );
