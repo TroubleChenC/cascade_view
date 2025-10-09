@@ -1,3 +1,7 @@
+## 0.1.1
+* Add 'selectedColor' option, if it is null, `Theme.of(context).colorScheme.primary` is used.
+* Set tabs to left alignment.
+
 ## 0.1.0
 
 * Add AsyncCascadeView widget
