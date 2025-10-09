@@ -1,6 +1,6 @@
 name: cascade_view
 description: "Select from a set of related data sets, such as provinces, municipalities, company levels, classifications of things, etc."
-version: 0.1.0
+version: 0.1.1
 homepage: "https://github.com/TroubleChenC/cascade_view"
 
 environment:
