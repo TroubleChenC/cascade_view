@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// item
 class ListItem {
   bool isSelected;
   final String label;
@@ -8,6 +9,7 @@ class ListItem {
   ListItem(this.label, this.value, {this.isSelected = false});
 }
 
+/// select one of a set of items
 class CheckList extends StatefulWidget {
   const CheckList({
     super.key,

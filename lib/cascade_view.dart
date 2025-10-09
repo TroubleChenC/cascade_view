@@ -3,19 +3,27 @@ import 'package:shimmer/shimmer.dart';
 
 import 'check_list.dart';
 
+/// cascade value
 typedef CascadeValue = dynamic;
 
+/// Data item
 class CascadeOption {
   final String label;
   final CascadeValue value;
   List<CascadeOption>? children;
-  dynamic addition; // addition data
+
+  /// addition data. Other information except for the label and value if you need.
+  /// It is usually the source data item that you converted into the CascadeOption.
+  /// You can obtain it from the callback parameter CascadeValueExtend of onChange
+  dynamic addition;
 
   CascadeOption(this.label, this.value, {this.children, this.addition});
 }
 
-const List<CascadeOption> optionSkeleton = []; // loading effect
+/// loading effect
+const List<CascadeOption> optionSkeleton = [];
 
+/// include the selected CascadeOptions
 class CascadeValueExtend {
   final List<CascadeOption> items;
   final bool isLeaf;
@@ -40,9 +48,14 @@ class CascadeView extends StatefulWidget {
     this.selectedColor,
   });
 
+  /// Data of the cascade options
   final List<CascadeOption> options;
+
+  /// Triggered when the selected options are changed
   final void Function(List<CascadeValue> value, CascadeValueExtend extend)?
   onChange;
+
+  /// Default selected options
   final List<CascadeValue> value;
   final Color? selectedColor;
 
@@ -233,8 +246,14 @@ class AsyncCascadeView extends StatefulWidget {
     this.selectedColor,
   });
 
+  /// Data of the cascade options.
+  /// The options of the AsyncCascadeView will ignore children because children are obtained asynchronously from [getChildren]
   final List<CascadeOption> options;
+
+  /// Asynchronous data acquisition
   final Future<List<CascadeOption>> Function(CascadeOption) getChildren;
+
+  /// Triggered when the selected options are changed
   final void Function(List<CascadeValue> value, CascadeValueExtend extend)?
   onChange;
   final Color? selectedColor;

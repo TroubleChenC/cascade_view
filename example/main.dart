@@ -32,6 +32,7 @@ class _AppState extends State<App> {
                       CascadeOption('a-1', 'a-1'),
                       CascadeOption('a-2', 'a-2'),
                     ],
+                    addition: {"id": 001, "remark": "other data"},
                   ),
                   CascadeOption('b', 'b'),
                   CascadeOption('c', 'c'),
@@ -60,6 +61,12 @@ class _AppState extends State<App> {
 
   void _onChange(List<CascadeValue> values, CascadeValueExtend extend) {
     // todo: Handle your business
+
+    // addition data
+    if (extend.items.isNotEmpty) {
+      final data = extend.items.last.addition;
+      print(data);
+    }
   }
 }
 
