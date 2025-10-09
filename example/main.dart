@@ -17,7 +17,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ThemeData(useMaterial3: false),
+      theme: ThemeData(useMaterial3: true),
       home: Scaffold(
         appBar: AppBar(title: const Text('Cascade Demo')),
         body: Column(
@@ -37,7 +37,7 @@ class _AppState extends State<App> {
                   CascadeOption('c', 'c'),
                 ],
                 onChange: _onChange,
-                selectedColor: Colors.red,
+                selectedColor: Colors.blue,
               ),
             ),
             Expanded(
