@@ -1,3 +1,6 @@
+## 0.1.3
+* Improve documentation
+
 ## 0.1.2
 * Improve the api documentation
 
