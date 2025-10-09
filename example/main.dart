@@ -14,6 +14,21 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final List<Map> _data = [
+    {
+      'id': 01,
+      'name': 'a',
+      'remark': 'remark',
+      'children': [
+        {'id': 0101, 'name': 'a-1'},
+        {'id': 0102, 'name': 'a-2'},
+        {'id': 0103, 'name': 'a-3'},
+      ],
+    },
+    {'id': 02, 'name': 'b'},
+    {'id': 03, 'name': 'c'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,25 +37,15 @@ class _AppState extends State<App> {
         appBar: AppBar(title: const Text('Cascade Demo')),
         body: Column(
           children: [
+            const Text('Cascade'),
             Expanded(
               child: CascadeView(
-                options: [
-                  CascadeOption(
-                    'a',
-                    'a',
-                    children: [
-                      CascadeOption('a-1', 'a-1'),
-                      CascadeOption('a-2', 'a-2'),
-                    ],
-                    addition: {"id": 001, "remark": "other data"},
-                  ),
-                  CascadeOption('b', 'b'),
-                  CascadeOption('c', 'c'),
-                ],
+                options: transformList(_data) ?? [],
                 onChange: _onChange,
                 selectedColor: Colors.blue,
               ),
             ),
+            const Text('Async Cascade'),
             Expanded(
               child: AsyncCascadeView(
                 options: [
@@ -80,4 +85,22 @@ Future<List<CascadeOption>> getChildrenList(CascadeOption option) async {
     var val = '${option.label}-$index';
     return CascadeOption(val, val);
   });
+}
+
+// transform source data to List<CascadeOption>
+List<CascadeOption>? transformList(
+  List<dynamic>? list, {
+  String label = 'name',
+  String value = 'id',
+  String children = 'children',
+}) {
+  if (list == null || list.isEmpty) return null;
+  return list.map((item) {
+    return CascadeOption(
+      item[label],
+      item[value],
+      addition: item,
+      children: transformList(item[children], label: label, value: value),
+    );
+  }).toList();
 }
